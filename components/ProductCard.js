@@ -1,23 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
+import dynamic from "next/dynamic";
 import { deleteProduct } from "@/app/actions";
-import PriceChart from "./PriceChart";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Trash2, LineChart, Tag } from "lucide-react";
+import { ExternalLink, Trash2, LineChart, Tag, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-export default function ProductCard({ product }) {
+// recharts is the single largest dependency in the client bundle and the
+// chart is only rendered after the user expands a card, so it is loaded on
+// demand instead of shipping with the initial page.
+const PriceChart = dynamic(() => import("./PriceChart"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-8 text-muted-foreground w-full">
+      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+      Loading chart...
+    </div>
+  ),
+});
+
+function ProductCard({ product }) {
   const [showChart, setShowChart] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const handleDelete = async () => {
-    if (!confirm("Stop tracking this item?")) return;
+  const handleDelete = useCallback(async () => {
+    if (!window.confirm("Stop tracking this item?")) return;
+
     setDeleting(true);
-    await deleteProduct(product.id);
+    const result = await deleteProduct(product.id);
+
+    // Only report success when the server actually removed the row, and
+    // re-enable the control if it did not.
+    if (result?.error) {
+      toast.error(result.error);
+      setDeleting(false);
+      return;
+    }
+
     toast.success("Removed from watchlist");
-  };
+  }, [product.id]);
+
+  const toggleChart = useCallback(() => setShowChart((open) => !open), []);
 
   return (
     <div className="group relative rounded-3xl p-[1px] transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
@@ -32,7 +57,16 @@ export default function ProductCard({ product }) {
           <div className="flex justify-between items-start gap-4 mb-5">
             <div className="relative w-16 h-16 shrink-0 bg-white dark:bg-white/90 rounded-2xl p-2 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
               {product.image_url ? (
-                <img src={product.image_url} alt="" className="w-full h-full object-contain" />
+                <img
+                  src={product.image_url}
+                  alt=""
+                  width={64}
+                  height={64}
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-contain"
+                />
               ) : (
                 <Tag className="w-6 h-6 text-gray-300" />
               )}
@@ -47,6 +81,7 @@ export default function ProductCard({ product }) {
               className="h-8 w-8 rounded-full text-muted-foreground/50 hover:text-red-500 hover:bg-red-500/10 transition-colors" 
               onClick={handleDelete} 
               disabled={deleting}
+              aria-label={`Stop tracking ${product.name}`}
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -70,7 +105,12 @@ export default function ProductCard({ product }) {
               className="rounded-full w-10 h-10 shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300 hover:scale-110 active:scale-95" 
               asChild
             >
-              <Link href={product.url} target="_blank">
+              <Link
+                href={product.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                aria-label={`Open ${product.name} in a new tab`}
+              >
                 <ExternalLink className="w-4 h-4" />
               </Link>
             </Button>
@@ -81,7 +121,8 @@ export default function ProductCard({ product }) {
           <Button
             variant="ghost"
             className="w-full justify-between hover:bg-black/5 dark:hover:bg-white/10 rounded-xl h-9 text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
-            onClick={() => setShowChart(!showChart)}
+            onClick={toggleChart}
+            aria-expanded={showChart}
           >
             <span className="flex items-center gap-2">
               <LineChart className="w-3.5 h-3.5" />
@@ -102,3 +143,7 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
+
+// Cards are rendered in a list; memoizing avoids re-rendering every sibling
+// when one card's local state changes.
+export default memo(ProductCard);

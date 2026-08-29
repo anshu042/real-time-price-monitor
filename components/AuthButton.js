@@ -1,13 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { signOut } from "@/app/actions";
-import AuthModal from "./AuthModal";
 import { Button } from "@/components/ui/button";
 import { LogIn, LogOut } from "lucide-react";
 
+// The dialog is only needed once the user chooses to sign in, so its Radix
+// dependency is kept out of the initial bundle.
+const AuthModal = dynamic(() => import("./AuthModal"), { ssr: false });
+
 export default function AuthButton({ user }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const closeModal = useCallback(() => setShowAuthModal(false), []);
+  const openModal = useCallback(() => setShowAuthModal(true), []);
 
   if (user) {
     return (
@@ -23,7 +29,7 @@ export default function AuthButton({ user }) {
   return (
     <>
       <Button
-        onClick={() => setShowAuthModal(true)}
+        onClick={openModal}
         variant="default"
         size="sm"
         className="bg-blue-500 hover:bg-green-600 gap-2"
@@ -32,10 +38,9 @@ export default function AuthButton({ user }) {
         Sign In
       </Button>
 
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
+      {showAuthModal && (
+        <AuthModal isOpen={showAuthModal} onClose={closeModal} />
+      )}
     </>
   );
 }

@@ -18,19 +18,35 @@ export default function PriceChart({ productId }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Guard against setting state after unmount, or after productId changes
+    // while an earlier request is still in flight.
+    let active = true;
+
     async function loadData() {
-      const history = await getPriceHistory(productId);
+      try {
+        const history = await getPriceHistory(productId);
+        if (!active) return;
 
-      const chartData = history.map((item) => ({
-        date: new Date(item.checked_at).toLocaleDateString(),
-        price: parseFloat(item.price),
-      }));
-
-      setData(chartData);
-      setLoading(false);
+        setData(
+          history.map((item) => ({
+            date: new Date(item.checked_at).toLocaleDateString(),
+            price: Number.parseFloat(item.price),
+          }))
+        );
+      } catch (error) {
+        console.error("Load price history error:", error);
+        if (active) setData([]);
+      } finally {
+        if (active) setLoading(false);
+      }
     }
 
+    setLoading(true);
     loadData();
+
+    return () => {
+      active = false;
+    };
   }, [productId]);
 
   if (loading) {

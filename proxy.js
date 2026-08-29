@@ -7,11 +7,13 @@ export async function proxy(request) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * Run session refresh on page requests only. Everything below is skipped
+     * so no Supabase round-trip is spent on assets and crawler files:
+     * - _next/static, _next/image (build output and optimized images)
+     * - favicon / icons / manifest
+     * - robots.txt and sitemap.xml (must stay publicly cacheable)
+     * - common static file extensions
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|css|js|woff|woff2|ttf|otf|map)$).*)",
   ],
 };
