@@ -53,7 +53,7 @@ function ProductCard({ product }) {
         {/* Shine Effect */}
         <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent z-10 pointer-events-none" />
 
-        <div className="p-6 flex-1 relative z-20">
+        <div className="p-4 sm:p-6 flex-1 relative z-20">
           <div className="flex justify-between items-start gap-4 mb-5">
             <div className="relative w-16 h-16 shrink-0 bg-white dark:bg-white/90 rounded-2xl p-2 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
               {product.image_url ? (
@@ -91,11 +91,11 @@ function ProductCard({ product }) {
             {product.name}
           </h3>
 
-          <div className="flex items-end justify-between">
-            <div>
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0">
               <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">Current Price</p>
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black tracking-tight text-foreground">
+                <span className="text-2xl sm:text-3xl font-black tracking-tight text-foreground break-words">
                   {product.currency} {product.current_price}
                 </span>
               </div>

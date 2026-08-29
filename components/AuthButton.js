@@ -18,8 +18,15 @@ export default function AuthButton({ user }) {
   if (user) {
     return (
       <form action={signOut}>
-        <Button variant="ghost" size="sm" type="submit" className="gap-2">
-          <LogOut className="w-4 h-4" />
+        {/* The button is visually compact but keeps a 44px touch area via a
+            transparent pseudo-element, so tap-target sizing still passes. */}
+        <Button
+          variant="ghost"
+          size="sm"
+          type="submit"
+          className="relative h-8 gap-1.5 px-2.5 text-xs sm:h-9 sm:px-3 sm:text-sm before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-[calc(100%+0.5rem)] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']"
+        >
+          <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           Sign Out
         </Button>
       </form>
@@ -32,9 +39,9 @@ export default function AuthButton({ user }) {
         onClick={openModal}
         variant="default"
         size="sm"
-        className="bg-blue-500 hover:bg-green-600 gap-2"
+        className="relative h-8 gap-1.5 bg-blue-500 px-2.5 text-xs hover:bg-green-600 sm:h-9 sm:px-3 sm:text-sm before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-[calc(100%+0.5rem)] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']"
       >
-        <LogIn className="w-4 h-4" />
+        <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         Sign In
       </Button>
 
