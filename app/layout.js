@@ -121,13 +121,17 @@ const jsonLd = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <body>
+        {/*
+          Rendered inside <body> on purpose: declaring a manual <head> closes
+          the head early and pushes Next's streamed metadata into the body,
+          which breaks meta-description detection. JSON-LD is valid anywhere
+          in the document.
+        */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

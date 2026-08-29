@@ -67,16 +67,16 @@ export default async function Home() {
                   <f.icon className="w-6 h-6 text-primary" />
                 </div>
                 
-                <h3 className="text-xl font-bold mb-2 text-foreground/90">{f.title}</h3>
+                <h2 className="text-xl font-bold mb-2 text-foreground/90">{f.title}</h2>
                 <p className="text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
         ) : (
           <div>
-          <h3 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-gray-900">
             Tracked Products History
-            </h3><br></br>
+            </h2><br></br>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in zoom-in-95 duration-500">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -87,9 +87,9 @@ export default async function Home() {
         {user && products.length === 0 && (
         <section className="max-w-2xl mx-auto px-4 pb-20 text-center">
           <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
               No products yet
-            </h3>
+            </h2>
             <p className="text-gray-600">
               Add your first product above to start tracking prices!
             </p>
@@ -97,13 +97,13 @@ export default async function Home() {
         </section>
       )}
         <footer className="mt-32 pb-8 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
-  <div className="inline-flex items-center gap-1.5 text-sm text-muted-foreground/60 hover:text-muted-foreground transition-colors group/footer">
+  <div className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group/footer">
     <span>Designed & Developed by</span>
     <a 
       href="https://anshu-portfolio042.vercel.app/" 
       target="_blank" 
       rel="noopener noreferrer"
-      className="relative font-mono font-bold text-primary/80 group-hover/footer:text-transparent group-hover/footer:bg-clip-text group-hover/footer:bg-gradient-to-r group-hover/footer:from-cyan-500 group-hover/footer:to-pink-500 transition-all duration-300 cursor-pointer"
+      className="relative font-mono font-bold text-primary group-hover/footer:text-transparent group-hover/footer:bg-clip-text group-hover/footer:bg-gradient-to-r group-hover/footer:from-cyan-500 group-hover/footer:to-pink-500 transition-all duration-300 cursor-pointer"
     >
       Anshu Kushwaha
       <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-gradient-to-r from-cyan-500 to-pink-500 group-hover/footer:w-full transition-all duration-300" />
