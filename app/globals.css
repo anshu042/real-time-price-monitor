@@ -98,6 +98,56 @@
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary;
   }
+
+  /* Minimal, theme-aware scrollbar.
+     Firefox / spec-compliant browsers: thin track with a translucent thumb
+     derived from the foreground token, so it adapts to light and dark. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  /* scrollbar-width/-color do not inherit, so apply them to every scroll
+     container rather than html alone — otherwise nested scrollers keep the
+     chunky browser default. */
+  html,
+  body,
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent)
+      transparent;
+  }
+
+  /* WebKit / Blink: same treatment, expressed via the pseudo-elements. */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--foreground) 20%, transparent);
+    border-radius: 9999px;
+    /* Inset the thumb so it reads as a slim pill rather than a full-width bar. */
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 200ms ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--foreground) 38%, transparent);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: color-mix(in oklch, var(--primary) 65%, transparent);
+  }
+
+  /* Let the two scrollbars meet cleanly instead of drawing a grey square. */
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
 
 @keyframes float {
