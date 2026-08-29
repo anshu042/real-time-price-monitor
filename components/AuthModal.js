@@ -53,7 +53,7 @@ export default function AuthModal({ isOpen, onClose }) {
             <Button
               onClick={handleGoogleLogin}
               variant="outline"
-              className="w-full h-12 gap-3 bg-white border-gray-200 text-gray-700 font-medium text-base rounded-xl transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:shadow-none"
+              className="w-full h-12 gap-3 bg-white dark:bg-white border-gray-200 dark:border-gray-200 text-gray-700 dark:text-gray-700 font-medium text-base rounded-xl transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-50 dark:hover:text-gray-900 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:shadow-none"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
